@@ -17,4 +17,4 @@ We study whether the collision resistance of a hash function depends on its outp
 - Brunella Andriatsahavojaona (145880)
 - Anthonin Bleuse (145881)
 - Sandra Amurao (146859)
-- [Name 4] ([number])
+- Youssef Malki (146347)
