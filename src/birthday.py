@@ -2,6 +2,7 @@ import hashlib
 import random
 import time
 import math
+import csv
 
 functions = ["md5", "sha1", "sha256", "sha3_256"]
 message = b"abc"
@@ -66,3 +67,26 @@ for trial in range(1, 31):            # 30 times
 mean=sum(all_attempts)/len(all_attempts)
 theory = expected_attempts(n)
 print(mean, theory, mean / theory)
+
+print("\nstep 6")
+sizes = [16, 20, 24, 28, 32]
+nb_trials = 100     
+
+with open("results/exp1_birthday.csv", "w", newline="") as f:
+    writer = csv.writer(f)
+    writer.writerow(["function", "n", "trial", "attempts", "seconds", "msg1_hex", "msg2_hex"])
+
+    for n in sizes:
+        for name in functions:
+            all_attempts = []
+
+            for trial in range(1, nb_trials + 1):
+                attempts, duration, m1, m2 =find_collision(name,n,trial)        
+                all_attempts.append(attempts)
+                writer.writerow([name, n, trial, attempts, duration, m1.hex(), m2.hex()])               
+
+            mean=sum(all_attempts)/len(all_attempts)                            
+            theory = expected_attempts(n)                            
+            print(f"n={n}  {name:9}  mean={mean:.0f}  theory={theory:.0f}  ratio={mean/theory:.2f}")
+
+print("CSV saved in results/exp1_birthday.csv")
