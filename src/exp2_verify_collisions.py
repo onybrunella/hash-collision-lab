@@ -24,6 +24,9 @@ def compare_pair(name, path_a, path_b):
     
     return rows
 
-    
-for row in compare_pair("fastcoll", "data/shattered-1.pdf", "data/shattered-2.pdf"):
-    print(row)
+def add_suffix(path, suffix, new_path):
+    with open(path, "rb") as f:
+        data = f.read()                 # read and get contents first from the file 
+    with open(new_path, "wb") as f:     # open write to a new file
+        f.write(data + suffix)          # contents of the file earlier and add the suffix
+   
