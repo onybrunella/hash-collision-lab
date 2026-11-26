@@ -48,7 +48,7 @@ Check: `certutil -hashfile md5_a.bin MD5` and `certutil -hashfile md5_b.bin MD5`
 
 ### Timings (10 runs)
 
-CPU: **TODO – fill in (Settings → System → About → Processor)**
+CPU: Intel Core Ultra 7 256V
 
 | Run | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
