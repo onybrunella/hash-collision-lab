@@ -13,3 +13,5 @@ venv/
 *.fls
 *.fdb_latexmk
 *.synctex.gz
+.venv/
+__pycache__/
