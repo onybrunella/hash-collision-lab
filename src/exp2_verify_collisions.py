@@ -1,8 +1,10 @@
 import hashlib
+import csv
+
 HASH_FUNCTIONS = ["md5", "sha1", "sha256", "sha3_256"]
 
-"""Returns the hash of a file as hex text."""
 def hash_file(path, algorithm):
+    """Returns the hash of a file as hex text."""
     with open (path, "rb") as f:
         data = f.read()
     return hashlib.new(algorithm, data).hexdigest()
@@ -26,7 +28,14 @@ def compare_pair(name, path_a, path_b):
 
 def add_suffix(path, suffix, new_path):
     with open(path, "rb") as f:
-        data = f.read()                 # read and get contents first from the file 
-    with open(new_path, "wb") as f:     # open write to a new file
-        f.write(data + suffix)          # contents of the file earlier and add the suffix
+        data = f.read()                 
+    with open(new_path, "wb") as f:     
+        f.write(data + suffix)         
    
+def save_csv(rows, path):
+    """Write the results table to a CSV file."""
+    with open(path, "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["pair", "algorithm", "hash_a", "hash_b", "same"])
+        writer.writerows(rows)
+
