@@ -1,5 +1,6 @@
 import hashlib
 import csv
+import os
 
 HASH_FUNCTIONS = ["md5", "sha1", "sha256", "sha3_256"]
 
@@ -7,6 +8,8 @@ def hash_file(path, algorithm):
     """Returns the hash of a file as hex text."""
     with open (path, "rb") as f:
         data = f.read()
+    
+    # run the hash function on the file's bytes, then convert the result to hex text
     return hashlib.new(algorithm, data).hexdigest()
 
 def compare_pair(name, path_a, path_b):
@@ -27,6 +30,7 @@ def compare_pair(name, path_a, path_b):
     return rows
 
 def add_suffix(path, suffix, new_path):
+    """Copy a file and add the same bytes at the end."""
     with open(path, "rb") as f:
         data = f.read()                 
     with open(new_path, "wb") as f:     
@@ -39,3 +43,33 @@ def save_csv(rows, path):
         writer.writerow(["pair", "algorithm", "hash_a", "hash_b", "same"])
         writer.writerows(rows)
 
+def main():
+    os.makedirs("results", exist_ok=True)
+
+    suffix = b"SRSI group project"
+
+    # MD5 collision pair (made by us with fastcoll)
+    add_suffix("data/md5_a.bin", suffix, "data/md5_a_suffix.bin")
+    add_suffix("data/md5_b.bin", suffix, "data/md5_b_suffix.bin")
+
+    # SHA-1 collision pair (SHAttered PDFs, Stevens et al. 2017)
+    add_suffix("data/shattered-1.pdf", suffix, "data/shattered-1_suffix.pdf")
+    add_suffix("data/shattered-2.pdf", suffix, "data/shattered-2_suffix.pdf")   
+
+    # Compare each pair with all 4 hash functions (4 pairs x 4 functions = 16 rows)
+    rows = []
+    rows += compare_pair("shattered", "data/shattered-1.pdf", "data/shattered-2.pdf")
+    rows += compare_pair("fastcoll", "data/md5_a.bin", "data/md5_b.bin")
+    rows += compare_pair("shattered + suffix", "data/shattered-1_suffix.pdf", "data/shattered-2_suffix.pdf")
+    rows += compare_pair("fastcoll + suffix", "data/md5_a_suffix.bin", "data/md5_b_suffix.bin")
+
+    # Show the results: pair name, hash function, same hash (True/False)
+    for row in rows:
+        print(row[0], row[1], row[4])
+
+    # Save the full results table (with the hashes)
+    save_csv(rows, "results/exp2_collisions.csv")
+    print("CSV saved in results/exp2_collisions.csv")
+
+if __name__ == "__main__":
+    main()
